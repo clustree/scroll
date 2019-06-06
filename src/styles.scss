@@ -1,0 +1,85 @@
+$size: 8px;
+
+.scroll-y {
+  position: relative;
+  height: 100%;
+  overflow-x: hidden;
+
+  &[data-moving] {
+    user-select: none;
+  }
+
+  .scroll-y__scrollbar-hider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
+
+  .scroll-y__scrollbar-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: $size + 2px;
+  }
+
+  .scroll-y__scrollbar {
+    position: absolute;
+    width: $size;
+    top: $size;
+    bottom: $size;
+    transform-origin: top;
+    right: 1px;
+    background-color: #fff;
+    opacity: 0;
+    transition: opacity 0.2s 0.5s ease;
+  }
+
+  .scroll-y__scrollbar__top,
+  .scroll-y__scrollbar__bottom {
+    position: absolute;
+    width: $size;
+    background-color: inherit;
+    height: $size;
+    border-radius: $size;
+  }
+
+  .scroll-y__scrollbar__top {
+    top: -$size / 2;
+  }
+
+  .scroll-y__scrollbar__bottom {
+    bottom: -$size / 2;
+  }
+
+  &.dark {
+    .scroll-y__scrollbar {
+      background-color: black;
+      cursor: pointer;
+    }
+  }
+
+  &:hover:not([data-hidden]),
+  &[data-moving]:not([data-hidden]),
+  &[data-scrolling]:not([data-hidden]) {
+    .scroll-y__scrollbar {
+      opacity: 0.6;
+      transition: opacity 0.5s ease;
+    }
+  }
+
+  &[data-hidden] {
+    .scroll-y__scrollbar {
+      transition: opacity 0s ease;
+    }
+  }
+
+  &[data-moving]:not([data-hidden]) {
+    .scroll-y__scrollbar {
+      opacity: 0.8;
+    }
+  }
+}

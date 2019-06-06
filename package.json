@@ -1,0 +1,13 @@
+{
+  "name": "@clustree/scroll",
+  "version": "1.0.0",
+  "description": "A React custom scroll component",
+  "main": "lib/index.js",
+  "repository": "git@github.com:clustree/scroll.git",
+  "author": "Clustree",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0"
+  }
+}
