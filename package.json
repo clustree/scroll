@@ -3,11 +3,46 @@
   "version": "1.0.0",
   "description": "A React custom scroll component",
   "main": "lib/index.js",
+  "module": "lib/index.esm.js",
   "repository": "git@github.com:clustree/scroll.git",
   "author": "Clustree",
   "license": "MIT",
   "peerDependencies": {
     "react": "^16.8.0",
     "react-dom": "^16.8.0"
+  },
+  "lint-staged": {
+    "src/**": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "prepare": "yarn run build",
+    "pre-build": "rimraf lib",
+    "build": "yarn build:js && yarn build:css",
+    "build:css": "sass src/styles.scss lib/index.css",
+    "build:js": "BABEL_ENV=production rollup -c",
+    "website:build": "cd website; yarn build",
+    "website:deploy": "gh-pages -d website/dist"
+  },
+  "devDependencies": {
+    "babel-preset-react-app": "^9.0.0",
+    "gh-pages": "^2.0.1",
+    "husky": "^2.4.0",
+    "lint-staged": "^8.2.0",
+    "prettier": "^1.18.1",
+    "rimraf": "^2.6.3",
+    "rollup": "^1.14.4",
+    "rollup-plugin-babel": "^4.3.2",
+    "sass": "^1.21.0"
   }
 }

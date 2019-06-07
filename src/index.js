@@ -1,5 +1,3 @@
-import './styles.scss';
-
 import React, { useState, useLayoutEffect, useEffect, useRef } from 'react';
 
 const GUTTER_WIDTH = 40;
@@ -94,7 +92,7 @@ export function ScrollY({ dark, children }) {
       requestAnimationFrame(animationLoop);
     };
 
-    const mouseDown = (event: MouseEvent) => {
+    const mouseDown = event => {
       // Prevent click events from bubbling up and closing modals for instance
       event.preventDefault();
       const scroller = scrollContainerRef.current;
@@ -120,7 +118,7 @@ export function ScrollY({ dark, children }) {
       }
     };
 
-    const mouseMove = (event: MouseEvent) => {
+    const mouseMove = event => {
       if (!isDraggingScrollbar.current) {
         return;
       }
@@ -155,7 +153,7 @@ export function ScrollY({ dark, children }) {
   }, []);
 
   return (
-    <div className={`scroll-y ${dark ? 'dark': ''}`} ref={rootRef}>
+    <div className={`scroll-y ${dark ? 'dark' : ''}`} ref={rootRef}>
       <div
         ref={scrollContainerRef}
         className="scroll-y__scrollbar-hider"
