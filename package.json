@@ -31,8 +31,8 @@
     "build": "yarn build:js && yarn build:css",
     "build:css": "sass src/styles.scss lib/index.css",
     "build:js": "BABEL_ENV=production rollup -c",
-    "website:build": "cd website; yarn build",
-    "website:deploy": "gh-pages -d website/dist"
+    "website:build": "cd website && PUBLIC_URL='//clustree.github.io/scroll' yarn build",
+    "website:deploy": "gh-pages -d website/build"
   },
   "devDependencies": {
     "babel-preset-react-app": "^9.0.0",
