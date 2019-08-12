@@ -24,6 +24,7 @@ $size: 8px;
     bottom: 0;
     right: 0;
     width: $size + 2px;
+    overflow-y: hidden;
   }
 
   .scroll-y__scrollbar {
