@@ -1,15 +1,22 @@
 {
   "files": {
-    "main.css": "//clustree.github.io/scroll/static/css/main.5c5b4712.chunk.css",
-    "main.js": "//clustree.github.io/scroll/static/js/main.4c30ba92.chunk.js",
-    "main.js.map": "//clustree.github.io/scroll/static/js/main.4c30ba92.chunk.js.map",
-    "runtime~main.js": "//clustree.github.io/scroll/static/js/runtime~main.8f728250.js",
-    "runtime~main.js.map": "//clustree.github.io/scroll/static/js/runtime~main.8f728250.js.map",
-    "static/js/2.c1399ff8.chunk.js": "//clustree.github.io/scroll/static/js/2.c1399ff8.chunk.js",
-    "static/js/2.c1399ff8.chunk.js.map": "//clustree.github.io/scroll/static/js/2.c1399ff8.chunk.js.map",
+    "main.css": "//clustree.github.io/scroll/static/css/main.572c5ba2.chunk.css",
+    "main.js": "//clustree.github.io/scroll/static/js/main.6020491c.chunk.js",
+    "main.js.map": "//clustree.github.io/scroll/static/js/main.6020491c.chunk.js.map",
+    "runtime-main.js": "//clustree.github.io/scroll/static/js/runtime-main.e73bd6f5.js",
+    "runtime-main.js.map": "//clustree.github.io/scroll/static/js/runtime-main.e73bd6f5.js.map",
+    "static/js/2.2ec15b73.chunk.js": "//clustree.github.io/scroll/static/js/2.2ec15b73.chunk.js",
+    "static/js/2.2ec15b73.chunk.js.map": "//clustree.github.io/scroll/static/js/2.2ec15b73.chunk.js.map",
     "index.html": "//clustree.github.io/scroll/index.html",
-    "precache-manifest.133736064ba19073cb1dffa6ff9f7218.js": "//clustree.github.io/scroll/precache-manifest.133736064ba19073cb1dffa6ff9f7218.js",
+    "precache-manifest.1228e044856c0065a237b021c4707658.js": "//clustree.github.io/scroll/precache-manifest.1228e044856c0065a237b021c4707658.js",
     "service-worker.js": "//clustree.github.io/scroll/service-worker.js",
-    "static/css/main.5c5b4712.chunk.css.map": "//clustree.github.io/scroll/static/css/main.5c5b4712.chunk.css.map"
-  }
+    "static/css/main.572c5ba2.chunk.css.map": "//clustree.github.io/scroll/static/css/main.572c5ba2.chunk.css.map",
+    "static/js/2.2ec15b73.chunk.js.LICENSE.txt": "//clustree.github.io/scroll/static/js/2.2ec15b73.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.e73bd6f5.js",
+    "static/js/2.2ec15b73.chunk.js",
+    "static/css/main.572c5ba2.chunk.css",
+    "static/js/main.6020491c.chunk.js"
+  ]
 }
