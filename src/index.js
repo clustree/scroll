@@ -1,4 +1,6 @@
-import React, { useState, useLayoutEffect, useEffect, useRef } from 'react';
+import './index.scss';
+import * as React from 'react';
+import { useState, useLayoutEffect, useEffect, useRef } from 'react';
 
 const GUTTER_WIDTH = 40;
 const OBSERVED_ATTRIBUTES = ['scrollTop', 'scrollHeight', 'offsetTop'];

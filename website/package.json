@@ -6,7 +6,7 @@
     "@clustree/scroll": "link:..",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
-    "react-scripts": "^3.1.0"
+    "react-scripts": "^3.4.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -28,5 +28,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "resolutions": {
+    "**/chokidar": "^3.3.1",
+    "**/micromatch": "^4.0.2",
+    "jest-haste-map": "25.1.0",
+    "mkdirp": "0.5.3",
+    "yargs-parser": "18.1.3"
   }
 }
