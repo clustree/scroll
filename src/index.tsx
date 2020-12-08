@@ -1,11 +1,18 @@
 import './index.scss';
 import * as React from 'react';
+import type { ReactNode } from 'react';
 import { useState, useLayoutEffect, useEffect, useRef } from 'react';
 
 const GUTTER_WIDTH = 40;
 const OBSERVED_ATTRIBUTES = ['scrollTop', 'scrollHeight', 'offsetTop'];
 
-export function ScrollY({ dark, children }) {
+type Values = {
+  scrollTop?: number;
+  scrollHeight?: number;
+  offsetHeight?: number;
+};
+
+export function ScrollY({ dark, children }: { dark?: boolean; children?: ReactNode }) {
   const [scrollbarWidth, setScrollbarWidth] = useState(0);
 
   // We store a reference to the top level node to set data attributes
@@ -13,14 +20,14 @@ export function ScrollY({ dark, children }) {
   // - scrolling: the element is scrolling (with a 100ms timeout using scrollingTimeout)
   // - hidden: the element has no scrollbar
   // - moving: the element is being dragged
-  const rootRef = useRef(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   const scrollingTimeout = useRef(null);
 
   // This stores a reference to the inner div that we measure
-  const scrollContainerRef = useRef(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // This stores a reference to the scrollbar itself
-  const scrollbarRef = useRef(null);
+  const scrollbarRef = useRef<HTMLDivElement>(null);
 
   // Are we currently dragging the scrollbar
   const isDraggingScrollbar = useRef(false);
@@ -46,7 +53,7 @@ export function ScrollY({ dark, children }) {
       const scrollbar = scrollbarRef.current;
 
       if (scrollContainer != null) {
-        const newValues = {};
+        const newValues: Values = {};
 
         // Measure from DOM
         newValues.scrollTop = scrollContainer.scrollTop;
@@ -59,7 +66,7 @@ export function ScrollY({ dark, children }) {
             clearTimeout(scrollingTimeout.current);
           }
           if (rootNode != null) {
-            rootNode.dataset.scrolling = true;
+            rootNode.dataset.scrolling = 'true';
           }
           scrollingTimeout.current = setTimeout(() => {
             const rootNode = rootRef.current;
@@ -79,7 +86,9 @@ export function ScrollY({ dark, children }) {
         // Draw the new scrollbar
         if (scrollbar != null) {
           scrollbar.style.transform = `translateY(${offset}%) scaleY(${scale})`;
-          Array.from(scrollbar.children).forEach((e) => (e.style.transform = `scaleY(${1 / scale})`));
+          for (const child of Array.from(scrollbar.children)) {
+            (child as HTMLElement).style.transform = `scaleY(${1 / scale})`;
+          }
         }
 
         // Show or hide the scrollbar depending on scale
@@ -87,7 +96,7 @@ export function ScrollY({ dark, children }) {
           if (scale < 1) {
             delete rootNode.dataset.hidden;
           } else {
-            rootNode.dataset.hidden = true;
+            rootNode.dataset.hidden = 'true';
           }
         }
       }
@@ -105,7 +114,7 @@ export function ScrollY({ dark, children }) {
       }
       const rootNode = rootRef.current;
       if (rootNode != null) {
-        rootNode.dataset.moving = true;
+        rootNode.dataset.moving = 'true';
       }
     };
 
