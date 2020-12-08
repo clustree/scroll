@@ -37,29 +37,28 @@ $size: 8px;
     background-color: #fff;
     opacity: 0;
     transition: opacity 0.2s 0.5s ease;
-  }
 
-  .scroll-y__scrollbar__top,
-  .scroll-y__scrollbar__bottom {
-    position: absolute;
-    width: $size;
-    background-color: inherit;
-    height: $size;
-    border-radius: $size;
-  }
+    & > * {
+      content: '';
+      position: absolute;
+      width: $size;
+      background-color: inherit;
+      height: $size;
+      border-radius: $size;
+    }
 
-  .scroll-y__scrollbar__top {
-    top: -$size / 2;
-  }
+    & > *:first-child {
+      top: -$size / 2;
+    }
 
-  .scroll-y__scrollbar__bottom {
-    bottom: -$size / 2;
+    & > *:last-child {
+      bottom: -$size / 2;
+    }
   }
 
   &.dark {
     .scroll-y__scrollbar {
       background-color: black;
-      cursor: pointer;
     }
   }
 

@@ -178,8 +178,8 @@ export function ScrollY({ dark, children }: { dark?: boolean; children?: ReactNo
       </div>
       <div className="scroll-y__scrollbar-container">
         <div ref={scrollbarRef} className="scroll-y__scrollbar">
-          <div className="scroll-y__scrollbar__top" />
-          <div className="scroll-y__scrollbar__bottom" />
+          <div />
+          <div />
         </div>
       </div>
     </div>
