@@ -2,17 +2,11 @@ import './index.scss';
 import * as React from 'react';
 import type { ReactNode } from 'react';
 import { useState, useLayoutEffect, useEffect, useRef } from 'react';
+import { observe } from './rafobserver';
 
 const GUTTER_WIDTH = 40;
-const OBSERVED_ATTRIBUTES = ['scrollTop', 'scrollHeight', 'offsetTop'];
 
-type Values = {
-  scrollTop?: number;
-  scrollHeight?: number;
-  offsetHeight?: number;
-};
-
-export function ScrollY({ dark, children }: { dark?: boolean; children?: ReactNode }) {
+export function ScrollY({ dark, children }: { dark?: boolean; children: ReactNode }) {
   const [scrollbarWidth, setScrollbarWidth] = useState(0);
 
   // We store a reference to the top level node to set data attributes
@@ -21,7 +15,6 @@ export function ScrollY({ dark, children }: { dark?: boolean; children?: ReactNo
   // - hidden: the element has no scrollbar
   // - moving: the element is being dragged
   const rootRef = useRef<HTMLDivElement>(null);
-  const scrollingTimeout = useRef(null);
 
   // This stores a reference to the inner div that we measure
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -29,138 +22,110 @@ export function ScrollY({ dark, children }: { dark?: boolean; children?: ReactNo
   // This stores a reference to the scrollbar itself
   const scrollbarRef = useRef<HTMLDivElement>(null);
 
-  // Are we currently dragging the scrollbar
-  const isDraggingScrollbar = useRef(false);
-
-  // Initial scrollTop when we started dragging
-  const initialScrollTop = useRef(0);
-
-  // Initial scrollbar position
-  const initialScrollbarY = useRef(0);
-  let scrollbarScale = useRef(1);
-
   useEffect(() => {
-    let animationId = null;
+    const state = {
+      // Are we currently dragging the scrollbar
+      _isDraggingScrollbar: false,
+      // Initial scrollTop when we started dragging
+      _initialScrollTop: -1,
+      // Initial scrollbar position
+      _initialScrollbarY: -1,
+      _scrollbarScale: 1,
+      _offset: -1,
+      _timeout: null,
+    };
+    // Previously measured values
+    let prevValues = [];
 
-    // Previously measured values of OBSERVED_ATTRIBUTES
-    let prevValues = {};
+    const { dataset } = rootRef.current;
+    const scrollContainer = scrollContainerRef.current;
+    const scrollbar = scrollbarRef.current;
 
     // measure every frame
     // This is the only reliable way to check for scrollHeight changes
-    const animationLoop = () => {
-      const rootNode = rootRef.current;
-      const scrollContainer = scrollContainerRef.current;
-      const scrollbar = scrollbarRef.current;
-
-      if (scrollContainer != null) {
-        const newValues: Values = {};
-
-        // Measure from DOM
-        newValues.scrollTop = scrollContainer.scrollTop;
-        newValues.scrollHeight = scrollContainer.scrollHeight;
-        newValues.offsetHeight = scrollContainer.offsetHeight;
-
+    const unobserve = observe(
+      () => {
+        // console.log('measure called');
+        return [scrollContainer.scrollTop, scrollContainer.scrollHeight, scrollContainer.offsetHeight];
+      },
+      (newValues, time) => {
         // Check if any value has changed
-        if (OBSERVED_ATTRIBUTES.some((key) => newValues[key] !== prevValues[key])) {
-          if (scrollingTimeout.current != null) {
-            clearTimeout(scrollingTimeout.current);
-          }
-          if (rootNode != null) {
-            rootNode.dataset.scrolling = 'true';
-          }
-          scrollingTimeout.current = setTimeout(() => {
-            const rootNode = rootRef.current;
-            if (rootNode != null) {
-              delete rootNode.dataset.scrolling;
-            }
+        if (newValues.some((val, i) => val !== prevValues[i])) {
+          clearTimeout(state._timeout);
+          state._timeout = setTimeout(() => {
+            delete dataset.scrolling;
           }, 100);
+          dataset.scrolling = 'true';
           prevValues = newValues;
         }
-
-        const { scrollTop, scrollHeight, offsetHeight } = newValues;
+        const [scrollTop, scrollHeight, offsetHeight] = newValues;
 
         const offset = (100 * scrollTop) / scrollHeight;
         const scale = offsetHeight / scrollHeight;
-        scrollbarScale.current = scale;
 
-        // Draw the new scrollbar
-        if (scrollbar != null) {
+        if (state._scrollbarScale !== scale || offset != state._offset) {
+          // Move the scrollbar
           scrollbar.style.transform = `translateY(${offset}%) scaleY(${scale})`;
-          for (const child of Array.from(scrollbar.children)) {
-            (child as HTMLElement).style.transform = `scaleY(${1 / scale})`;
+          if (scale != state._scrollbarScale) {
+            // If scale has changed, we need to redraw the rounded corners of the bar
+            for (const child of Array.from(scrollbar.children)) {
+              (child as HTMLElement).style.transform = `scaleY(${1 / scale})`;
+            }
+            // Show or hide the scrollbar depending on scale
+            if (scale < 1) {
+              delete dataset.hidden;
+            } else {
+              dataset.hidden = 'true';
+            }
+            state._scrollbarScale = scale;
           }
         }
+      },
+    );
 
-        // Show or hide the scrollbar depending on scale
-        if (rootNode != null) {
-          if (scale < 1) {
-            delete rootNode.dataset.hidden;
-          } else {
-            rootNode.dataset.hidden = 'true';
-          }
-        }
-      }
-      requestAnimationFrame(animationLoop);
-    };
-
-    const mouseDown = (event) => {
+    const mouseDown = (event: MouseEvent) => {
       // Prevent click events from bubbling up and closing modals for instance
       event.preventDefault();
-      const scroller = scrollContainerRef.current;
-      if (scroller != null) {
-        isDraggingScrollbar.current = true;
-        initialScrollbarY.current = event.clientY;
-        initialScrollTop.current = scroller.scrollTop;
-      }
-      const rootNode = rootRef.current;
-      if (rootNode != null) {
-        rootNode.dataset.moving = 'true';
-      }
+      state._isDraggingScrollbar = true;
+      state._initialScrollbarY = event.clientY;
+      state._initialScrollTop = scrollContainer.scrollTop;
+
+      dataset.moving = 'true';
     };
 
     const mouseUp = () => {
-      if (!isDraggingScrollbar.current) {
+      if (!state._isDraggingScrollbar) {
         return;
       }
-      isDraggingScrollbar.current = false;
-      const rootNode = rootRef.current;
-      if (rootNode != null) {
-        delete rootNode.dataset.moving;
-      }
+      state._isDraggingScrollbar = false;
+      delete dataset.moving;
     };
 
-    const mouseMove = (event) => {
-      if (!isDraggingScrollbar.current) {
+    const mouseMove = (event: MouseEvent) => {
+      if (!state._isDraggingScrollbar) {
         return;
       }
-      const scroller = scrollContainerRef.current;
-      if (scroller != null) {
-        const diff = (event.clientY - initialScrollbarY.current) / scrollbarScale.current;
-        scroller.scrollTop = initialScrollTop.current + diff;
-      }
+      const diff = (event.clientY - state._initialScrollbarY) / state._scrollbarScale;
+      scrollContainer.scrollTop = state._initialScrollTop + diff;
     };
 
-    const scrollbar = scrollbarRef.current;
-    animationLoop();
-    window.addEventListener('mouseup', mouseUp);
-    window.addEventListener('mousemove', mouseMove);
+    addEventListener('mouseup', mouseUp);
+    addEventListener('mousemove', mouseMove);
     scrollbar.addEventListener('mousedown', mouseDown);
     return () => {
       // Cancel the animationLoop
-      window.cancelAnimationFrame(animationId);
-      window.removeEventListener('mouseup', mouseUp);
-      window.removeEventListener('mousemove', mouseMove);
+      unobserve();
+      removeEventListener('mouseup', mouseUp);
+      removeEventListener('mousemove', mouseMove);
       scrollbar.removeEventListener('mousedown', mouseDown);
     };
   }, []);
 
   useLayoutEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
+    const { offsetWidth, clientWidth } = scrollContainerRef.current;
 
-    if (scrollContainer != null) {
-      const width = scrollContainer.offsetWidth - scrollContainer.clientWidth;
-      setScrollbarWidth((_w) => width);
-    }
+    const width = offsetWidth - clientWidth;
+    setScrollbarWidth(width);
   }, []);
 
   return (
