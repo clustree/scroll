@@ -5,6 +5,7 @@
   "dependencies": {
     "@clustree/scroll": "link:..",
     "react": "^16.9.0",
+    "react-app-polyfill": "^2.0.0",
     "react-dom": "^16.9.0",
     "react-scripts": "^3.4.1"
   },
@@ -21,7 +22,8 @@
     "production": [
       ">0.2%",
       "not dead",
-      "not op_mini all"
+      "not op_mini all",
+      "ie 11"
     ],
     "development": [
       "last 1 chrome version",
