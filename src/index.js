@@ -54,7 +54,7 @@ export function ScrollY({ dark, children }) {
         newValues.offsetHeight = scrollContainer.offsetHeight;
 
         // Check if any value has changed
-        if (OBSERVED_ATTRIBUTES.some(key => newValues[key] !== prevValues[key])) {
+        if (OBSERVED_ATTRIBUTES.some((key) => newValues[key] !== prevValues[key])) {
           if (scrollingTimeout.current != null) {
             clearTimeout(scrollingTimeout.current);
           }
@@ -79,7 +79,7 @@ export function ScrollY({ dark, children }) {
         // Draw the new scrollbar
         if (scrollbar != null) {
           scrollbar.style.transform = `translateY(${offset}%) scaleY(${scale})`;
-          Array.from(scrollbar.children).forEach(e => (e.style.transform = `scaleY(${1 / scale})`));
+          Array.from(scrollbar.children).forEach((e) => (e.style.transform = `scaleY(${1 / scale})`));
         }
 
         // Show or hide the scrollbar depending on scale
@@ -94,7 +94,7 @@ export function ScrollY({ dark, children }) {
       requestAnimationFrame(animationLoop);
     };
 
-    const mouseDown = event => {
+    const mouseDown = (event) => {
       // Prevent click events from bubbling up and closing modals for instance
       event.preventDefault();
       const scroller = scrollContainerRef.current;
@@ -120,7 +120,7 @@ export function ScrollY({ dark, children }) {
       }
     };
 
-    const mouseMove = event => {
+    const mouseMove = (event) => {
       if (!isDraggingScrollbar.current) {
         return;
       }
@@ -150,7 +150,7 @@ export function ScrollY({ dark, children }) {
 
     if (scrollContainer != null) {
       const width = scrollContainer.offsetWidth - scrollContainer.clientWidth;
-      setScrollbarWidth(_w => width);
+      setScrollbarWidth((_w) => width);
     }
   }, []);
 
